@@ -1,0 +1,14 @@
+@{
+  Layout = "_Layout";
+}
+
+@model ToDoList.Models.Item //tells controller what type of information to expect
+
+<h4>Add a new item</h4>
+@using (Html.BeginForm()) //html helper to signal that we have a form with a POSTHtml request
+{
+  @Html.LabelFor(model => model.Description) //this is the label for the text box
+  @Html.TextBoxFor(model => model.Description)  //this is the text box.
+  <input type="submit" value="Add new item" />
+} <!-- marks the end of the form-->
+<p>@Html.ActionLink("Show all items", "Index")</p>
