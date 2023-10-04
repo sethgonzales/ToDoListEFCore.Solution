@@ -25,7 +25,7 @@ namespace ToDoList.Controllers
       return View();
     }
 
-    [HttpPost] 
+    [HttpPost]
     public ActionResult Create(Item item) //take in form data with post request, assign to variables, and redirect to index
     {
       _db.Items.Add(item);  //add new item to the items list using db abilities
@@ -39,6 +39,24 @@ namespace ToDoList.Controllers
       return View(thisItem);
     }
 
+    //_db.Items.FirstOrDefault(IsItemMatching);
+    //bool IsItemMatching(Item item)
+    //{
+    // return item.ItemId == id;
+    //}
+    public ActionResult Edit(int id) //take us to the form page of the item we have selected passing along the items id
+    {
+      Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id); //instantiate Item thisItem, look into items within database (_db.Items), for the first item matching (or default if none) an item with a specific id that we are passing through
+      return View(thisItem);
+    }
+
+    [HttpPost]
+    public ActionResult Edit(Item item) //pass in some item information including the id
+    {
+      _db.Items.Update(item); //update the list of items in the items list with the item information we are passing in from the form
+      _db.SaveChanges(); //save changes 
+      return RedirectToAction("Index"); //take us back to the index page
+    }
   }
 }
 
