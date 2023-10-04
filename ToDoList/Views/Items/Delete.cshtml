@@ -1,0 +1,14 @@
+@{
+  Layout = "_Layout";
+}
+
+@model ToDoList.Models.Item //states that we are referencing a Model with the information in the items model
+
+<h2>Are you sure you want to delete this?</h2>
+
+@Html.DisplayNameFor(model => model.Description): @Html.DisplayFor(model => model.Description)
+@using (Html.BeginForm())
+{
+    <input type="submit" value="Delete" /> //once the form is submitted we are taken back the the controller with the DeleteConfirmed method where the item is actually deleted and then we are taken back the the index.cshtml page
+}
+@Html.ActionLink("Back to List", "Index")

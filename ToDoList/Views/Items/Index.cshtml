@@ -3,13 +3,23 @@
 }
 
 @using ToDoList.Models;
+@model List<ToDoList.Models.Item>;
 
 <h1>Items</h1>
 
-<ul>
-  @foreach(Item item in Model)
-  {
-    <li>@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId })</li>
-  }
+@if (@Model.Count == 0)
+{
+  <h3>No items have been added yet!</h3>
+}
+else
+{
+  <ul>
+  @foreach (Item item in Model)
+    {
+      <li>@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId }) | @item.Category.Name</li>
+    }
+  </ul>
+}
 
-<p>@Html.ActionLink("Add new item", "Create")</p> <!--create link to the new item page, points to create method in controller. Dont need to state controller name since we are in the items view
+<p>@Html.ActionLink("Add new item", "Create")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
