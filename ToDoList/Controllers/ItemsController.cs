@@ -44,10 +44,16 @@ namespace ToDoList.Controllers
 
     public ActionResult Details(int id)
     {
-      ViewBag.PageTitle = "Item Details";
-      Item thisItem = _db.Items.Include(item => item.Category).FirstOrDefault(item => item.ItemId == id); //in our list of items (_db.Items) give me the first (FirstOrDefault) item (item) whose (=>) Id (item.ItemId) matches the id (id) we passed in. Need to Include the item category with this informaiton as well
+      Item thisItem = _db.Items
+          .Include(item => item.Category)
+          .Include(item => item.JoinEntities)
+          .ThenInclude(join => join.Tag)
+          .FirstOrDefault(item => item.ItemId == id);
       return View(thisItem);
     }
+
+
+    //in our list of items (_db.Items) give me the first (FirstOrDefault) item (item) whose (=>) Id (item.ItemId) matches the id (id) we passed in. Need to Include the item category with this informaiton as well
 
     //_db.Items.FirstOrDefault(IsItemMatching);
     //bool IsItemMatching(Item item)
@@ -83,6 +89,35 @@ namespace ToDoList.Controllers
       _db.Items.Remove(thisItem); //remove this from the database
       _db.SaveChanges(); //save
       return RedirectToAction("Index"); //take us back to the index
+    }
+
+    public ActionResult AddTag(int id)
+    {
+      Item thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      ViewBag.TagId = new SelectList(_db.Tags, "TagId", "Title");
+      return View(thisItem);
+    }
+
+    [HttpPost]
+    public ActionResult AddTag(Item item, int tagId)
+    {
+#nullable enable
+      ItemTag? joinEntity = _db.ItemTags.FirstOrDefault(join => (join.TagId == tagId && join.ItemId == item.ItemId));
+#nullable disable
+      if (joinEntity == null && tagId != 0)
+      {
+        _db.ItemTags.Add(new ItemTag() { TagId = tagId, ItemId = item.ItemId });
+        _db.SaveChanges();
+      }
+      return RedirectToAction("Details", new { id = item.ItemId });
+    }
+    [HttpPost]
+    public ActionResult DeleteJoin(int joinId)
+    {
+      ItemTag joinEntry = _db.ItemTags.FirstOrDefault(entry => entry.ItemTagId == joinId);
+      _db.ItemTags.Remove(joinEntry);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
     }
   }
 }

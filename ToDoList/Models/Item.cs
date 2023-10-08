@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ToDoList.Models
 {
   public class Item
@@ -6,6 +8,7 @@ namespace ToDoList.Models
     public string Description { get; set; }
     public Category Category { get; set; } //grab the category object. This is the phone - how we make the call
     public int CategoryId { get; set; } //grab the category id - this is the phone number -how we use the phone to connect to the other person
+    public List<ItemTag> JoinEntities { get;}
 
 
   }
